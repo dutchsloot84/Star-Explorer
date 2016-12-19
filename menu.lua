@@ -2,6 +2,7 @@
 local composer = require( "composer" )
 
 local scene = composer.newScene()
+local font = "Arkitech Light.ttf"
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
@@ -39,10 +40,10 @@ function scene:create( event )
   title.x = display.contentCenterX
   title.y = 200
   --load play button and high scores button
-  local playButton = display.newText(sceneGroup, "Play", display.contentCenterX, 700, native.systemFont, 44)
+  local playButton = display.newText(sceneGroup, "Play", display.contentCenterX, 700, font, 44)
   playButton:setFillColor(0.82, 0.86, 1)
   
-  local highScoresButton = display.newText(sceneGroup, "High Scores", display.contentCenterX, 810, native.systemFont, 44)
+  local highScoresButton = display.newText(sceneGroup, "High Scores", display.contentCenterX, 810, font, 44)
   highScoresButton:setFillColor(0.75, 0.78, 1)
   
   playButton:addEventListener("tap", gotoGame)

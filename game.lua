@@ -74,6 +74,7 @@ local asteroidsTable = {}
 local ship
 local emitter
 local gameLoopTimer
+local font = "Arkitech Light.ttf"
 local livesText
 local scoreText
 
@@ -237,7 +238,6 @@ local function onCollision(event)
   if(event.phase == "began") then
     local obj1 = event.object1
     local obj2 = event.object2
-    --local emitterObj = emitter
     
     if((obj1.myName == "laser" and obj2.myName == "asteroid") or 
        (obj1.myName == "asteroid" and obj2.myName == "laser"))
@@ -328,9 +328,9 @@ function scene:create( event )
   mainGroup:insert(emitter)
   emitter:toBack()
   
-  --Display lives and score
-  livesText = display.newText(uiGroup, "Lives: " .. lives, 200, 80, native.systemFont, 36)
-  scoreText = display.newText(uiGroup, "Score: " .. score, 400, 80, native.systemFont, 36)
+  --Display lives and score using Space Age ttf file
+  livesText = display.newText(uiGroup, "Lives: " .. lives, 150, 0, font, 36)
+  scoreText = display.newText(uiGroup, "Score: " .. score, 500, 0, font, 36)
   
   --Add even listeners for the ship
   ship:addEventListener("tap", fireLaser)
