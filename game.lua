@@ -72,6 +72,7 @@ local died = false
 local asteroidsTable = {}
 
 local ship
+local emitter
 local gameLoopTimer
 local livesText
 local scoreText
@@ -150,6 +151,10 @@ local function fireLaser()
     })
 end
 
+local function updateEmitterLoc()
+  emitter.x = ship.x
+end
+
 --Function to touch and drag the ship left/right
 local function dragShip(event)
   local ship = event.target
@@ -164,6 +169,7 @@ local function dragShip(event)
   elseif ("moved" == phase) then
     --Move the ship to the new touch position
     ship.x = event.x -ship.touchOffsetX
+    updateEmitterLoc()
   
   elseif ("ended" == phase) then
     --Release touch focus on ship
@@ -205,6 +211,8 @@ local function restoreShip()
   --Reposition ship at bottom center of screen
   ship.x = display.contentCenterX
   ship.y = display.contentHeight - 100
+  --Reposition emitter to ships location
+  emitter.x, emitter.y = ship.x, ship.y
   
   --Fade in the ship. Fade in from 0 alpha to 1 over 4 seconds. On complete, set the ship to active body
   --so it can detect collision, reset died to false
@@ -214,6 +222,8 @@ local function restoreShip()
         died = false
       end
   } ) 
+  --Fade in the emitter from 0 to 1 over 4 seconds to coincide with the ship above.
+  transition.to(emitter, {alpha=1, time=4000})
 end
 
 local function endGame()
@@ -227,6 +237,7 @@ local function onCollision(event)
   if(event.phase == "began") then
     local obj1 = event.object1
     local obj2 = event.object2
+    --local emitterObj = emitter
     
     if((obj1.myName == "laser" and obj2.myName == "asteroid") or 
        (obj1.myName == "asteroid" and obj2.myName == "laser"))
@@ -261,9 +272,11 @@ local function onCollision(event)
           
           if (lives == 0) then
             display.remove(ship)
+            display.remove(emitter)
             timer.performWithDelay(2000, endGame)
           else
             ship.alpha = 0
+            emitter.alpha = 0
             timer.performWithDelay(1000, restoreShip)
           end
         end
@@ -292,9 +305,6 @@ function scene:create( event )
   mainGroup = display.newGroup() --Display group for ship, laser, asteroids, etc.
   sceneGroup:insert(mainGroup)   --Insert into the scene's view group
   
-  shipGroup = display.newGroup() --Display group for ship and emitter
-  sceneGroup:insert(shipGroup)   
-  
   uiGroup = display.newGroup()   --Display group for UI objects like lives and score
   sceneGroup:insert(uiGroup)     --Insert into the scene's view group
   
@@ -304,18 +314,18 @@ function scene:create( event )
   background.y = display.contentCenterY
   
   --Load the ship
-  ship = display.newImageRect(shipGroup, objectSheet, 4, 98, 79)
+  ship = display.newImageRect(mainGroup, objectSheet, 4, 98, 79)
   ship.x = display.contentCenterX
   ship.y = display.contentHeight - 100
   physics.addBody(ship, {radius=30, isSensor=true})
   ship.myName = "ship"
   
   --Create the emitter with the decoded parameters
-  local emitter = display.newEmitter(emitterParams)
+  emitter = display.newEmitter(emitterParams)
   --Center emitter in content area
   emitter.x = ship.x
   emitter.y = ship.y
-  shipGroup:insert(emitter)
+  mainGroup:insert(emitter)
   emitter:toBack()
   
   --Display lives and score
