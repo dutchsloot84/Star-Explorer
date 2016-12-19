@@ -3,6 +3,8 @@ local composer = require( "composer" )
 
 local scene = composer.newScene()
 
+local font = "Arkitech Light.ttf"
+
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
@@ -81,22 +83,22 @@ function scene:create( event )
   background.x = display.contentCenterX
   background.y = display.contentCenterY
   
-  local highScoresReader = display.newText(sceneGroup, "High Scores", display.contentCenterX, 100, native.systemFont, 44)
+  local highScoresReader = display.newText(sceneGroup, "High Scores", display.contentCenterX, 100, font, 44)
   
   for i = 1, 10 do
     if (scoresTable[i]) then
       local yPos = 150 + (i * 56)
       
-      local rankNum = display.newText(sceneGroup, i .. ")", display.contentCenterX-50, yPos, native.systemFont, 36)
+      local rankNum = display.newText(sceneGroup, i .. ")", display.contentCenterX-50, yPos, font, 36)
       rankNum:setFillColor(0.8)
       rankNum.anchorX = 1
       
-      local thisScore = display.newText(sceneGroup, scoresTable[i], display.contentCenterX-30, yPos, native.systemFont, 36)
+      local thisScore = display.newText(sceneGroup, scoresTable[i], display.contentCenterX-30, yPos, font, 36)
       thisScore.anchorX = 0
     end
   end
   
-  local menuButton = display.newText(sceneGroup, "Menu", display.contentCenterX, 810, native.systemFont, 44)
+  local menuButton = display.newText(sceneGroup, "Menu", display.contentCenterX, 810, font, 44)
   menuButton:setFillColor(0.75, 0.78, 1)
   menuButton:addEventListener("tap", gotoMenu)
   
